@@ -447,7 +447,7 @@ custom_css: asciidoc.css
 </div>
 <h1 id="_user_guide_creating_a_workbench" class="sect0">User guide - Creating a workbench</h1>
 <div class="sect1">
-<h2 id="api-workbench-overview_api-workbench">Overview of the workbench API</h2>
+<h2 id="api-workbench-overview_api-workbench">Overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>In this user guide, you create a Workbench by using the Open Data Hub Custom Resource Definitions (CRDs) and the OpenShift Command Line Interface (CLI). When you create a Workbench, you configure a Notebook image, along with other configurations. The Notebook image is optimized with the tools and libraries that you need for developing and training models.</p>
@@ -458,7 +458,7 @@ custom_css: asciidoc.css
 <h2 id="api-custom-image-creating_api-workbench">Creating a custom image by using the <code>ImageStream</code> CRD</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can create custom Notebook images based on your specific use case, apart from the Notebook images that are included in Open Data Hub. You can then use the custom images to create new Workbench instances.</p>
+<p>You can create custom Notebook images based on your specific use case, apart from the Notebook images that are included in Open Data Hub. You can then use those custom images to create new Workbench instances.</p>
 </div>
 <div class="paragraph">
 <p>A Notebook image is configured with an <code>ImageStream</code> Custom Resource Definition (CRD) by using annotations and labels.</p>
@@ -576,13 +576,20 @@ spec:
 </tr>
 </table>
 </div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>To verify whether the Image is created, run the following command:</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="api-workbench-creating_api-workbench">Creating a workbench by using the <code>Notebook</code> CRD</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<div class="title">Verification</div>
 <p>In Open Data Hub, a Workbench object is created using the <code>Notebook</code> Custom Resource Definition (CRD). The <code>Notebook</code> CRD has the following important configurations, among others:</p>
 </div>
 <div class="ulist">
@@ -877,7 +884,7 @@ spec:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-19 11:08:31 +0530
+Last updated 2025-02-26 10:43:20 +0530
 </div>
 </div>
 </body>
