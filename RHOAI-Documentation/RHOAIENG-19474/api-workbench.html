@@ -484,7 +484,7 @@ custom_css: asciidoc.css
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>To define the <code>ImageStream</code> CRD, create a YAML manifest file called <code>notebook-image-stream.yaml</code> and copy and paste the content shown below in the manifest file. The following YAML configures the <code>ImageStream</code> CR.</p>
+<p>To define the <code>ImageStream</code> CRD, create a YAML manifest file called <code>notebook-image-stream.yaml</code> and copy and paste the following configuration in the manifest file.</p>
 <div class="listingblock">
 <div class="title">Example <code>ImageStream</code></div>
 <div class="content">
@@ -579,14 +579,6 @@ spec:
 </tr>
 </table>
 </div>
-<div class="ulist">
-<div class="title">Verification</div>
-<ul>
-<li>
-<p>To verify whether the Image is created, run the following command:</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -623,13 +615,16 @@ spec:
 <li>
 <p>You have downloaded and installed the OpenShift command-line interface (CLI). See <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/cli_tools/openshift-cli-oc#installing-openshift-cli" target="_blank" rel="noopener">Installing the OpenShift CLI</a>.</p>
 </li>
+<li>
+<p>You have created a data science project called <code>my-data-science-project</code> by using the Open Data Hub Dashboard.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>To define the <code>Notebook</code> CRD, create a YAML manifest file called <code>notebook.yaml</code> and copy and paste the content shown below in the manifest file. The following YAML configures the <code>Notebook</code> CR.</p>
+<p>To define the <code>Notebook</code> CRD, create a YAML manifest file called <code>notebook.yaml</code> and copy and paste the following configuration in the manifest file.</p>
 <div class="listingblock">
 <div class="title">Example <code>Notebook</code></div>
 <div class="content">
@@ -867,20 +862,116 @@ spec:
 <p>To verify whether the Workbench has successfully created, run the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc get notebook</code></pre>
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe notebook -n my-data-science-project # <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>Notebook</code> CR is created in the <code>my-data-science-project</code> namespace.</p>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">Name:         my-workbench
+Namespace:    my-data-science-project
+Labels:       &lt;none&gt;
+Annotations:  notebooks.kubeflow.org/last-activity: 2024-07-30T20:27:25Z
+              notebooks.kubeflow.org/last_activity_check_timestamp: 2024-07-30T20:43:25Z
+              notebooks.opendatahub.io/inject-oauth: true
+              notebooks.opendatahub.io/last-image-selection: s2i-minimal-notebook:2024.1
+              notebooks.opendatahub.io/last-size-selection: Small
+              notebooks.opendatahub.io/oauth-logout-url:
+                https://rhods-dashboard-redhat-ods-applications.apps.my-cluster.com/projects/my-data-science-project?notebookLogout=my-workbench
+              opendatahub.io/accelerator-name:
+              opendatahub.io/image-display-name: Minimal Python
+              opendatahub.io/username: kube:admin
+              openshift.io/description:
+              openshift.io/display-name: my-workbench
+API Version:  kubeflow.org/v1
+Kind:         Notebook
+Metadata:
+  Creation Timestamp:  2025-03-06T13:27:25Z
+  Generation:          1
+  Resource Version:    42316914
+  UID:                 89f4....9e9-7c48-4f53-9397-05c....d21a
+Spec:
+  Template:
+    Spec:
+      Affinity:
+      Containers:
+        Env:
+          Name:   NOTEBOOK_ARGS
+          Value:  --ServerApp.port=8888
+--ServerApp.token=''
+--ServerApp.password=''
+--ServerApp.base_url=/notebook/my-data-science-project/my-workbench
+--ServerApp.quit_button=False
+--ServerApp.tornado_settings={"user":"kube-3aadmin","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.my-cluster.com", "hub_prefix":"/projects/my-data-science-project"}
+          Name:             JUPYTER_IMAGE
+          Value:            image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1
+          Name:             PIP_CERT
+          Value:            /etc/pki/tls/custom-certs/ca-bundle.crt
+          Name:             REQUESTS_CA_BUNDLE
+          Value:            /etc/pki/tls/custom-certs/ca-bundle.crt
+          Name:             SSL_CERT_FILE
+          Value:            /etc/pki/tls/custom-certs/ca-bundle.crt
+          Name:             PIPELINES_SSL_SA_CERTS
+          Value:            /etc/pki/tls/custom-certs/ca-bundle.crt
+          Name:             GIT_SSL_CAINFO
+          Value:            /etc/pki/tls/custom-certs/ca-bundle.crt
+        Image:              image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1
+        Image Pull Policy:  Always
+        Liveness Probe:
+          Failure Threshold:  3
+          Http Get:
+            Path:                 /notebook/my-data-science-project/my-workbench/api
+            Port:                 notebook-port
+            Scheme:               HTTP
+          Initial Delay Seconds:  10
+          Period Seconds:         5
+          Success Threshold:      1
+          Timeout Seconds:        1
+        Name:                     my-workbench
+        Ports:
+          Container Port:  8888
+          Name:            notebook-port
+          Protocol:        TCP
+        Readiness Probe:
+          Failure Threshold:  3
+          Http Get:
+            Path:                 /notebook/my-data-science-project/my-workbench/api
+            Port:                 notebook-port
+            Scheme:               HTTP
+          Initial Delay Seconds:  10
+          Period Seconds:         5
+          Success Threshold:      1
+          Timeout Seconds:        1
+        Resources:
+          Limits:
+            Cpu:     2
+            Memory:  8Gi
+          Requests:
+            Cpu:     1
+            Memory:  8Gi
+        Volume Mounts:
+          Mount Path:  /opt/app-root/src
+          Name:        my-workbench
+          Mount Path:  /dev/shm
+          Name:        shm
+          Mount Path:  /etc/pki/tls/custom-certs/ca-bundle.crt
+          Name:        trusted-ca
+          Read Only:   true
+          Sub Path:    ca-bundle.crt
+        Working Dir:   /opt/app-root/src
+        Args:
+          --provider=openshift</code></pre>
 </div>
 </div>
 </li>
+</ol>
+</div>
+</li>
 </ul>
-</div>
-<div class="paragraph">
-<div class="title">Example output</div>
-<p>+</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal"></code></pre>
-</div>
 </div>
 </div>
 </div>
