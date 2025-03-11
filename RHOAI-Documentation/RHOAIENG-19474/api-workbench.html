@@ -464,7 +464,7 @@ custom_css: asciidoc.css
 <p>You can create custom Notebook images based on your specific use case, apart from the Notebook images that are included in Open Data Hub. You can then use those custom images to create new Workbench instances.</p>
 </div>
 <div class="paragraph">
-<p>A Notebook image is configured with an <code>ImageStream</code> Custom Resource Definition (CRD) by using annotations and labels.</p>
+<p>You can customize a Notebook image by using the <code>ImageStream</code> Custom Resource Definition (CRD).</p>
 </div>
 <div class="paragraph">
 <p>In this procedure, you configure an <code>ImageStream</code> CRD and then create the <code>ImageStream</code> Custom Resource (CR). This <code>ImageStream</code> CR then becomes available in the Open Data Hub Dashboard for you to select while creating a Workbench.</p>
@@ -579,6 +579,52 @@ spec:
 </tr>
 </table>
 </div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>To verify whether the <code>ImageStream</code> has successfully created, run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe imagestream my-custom-notebook -n redhat-ods-applications # <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In this example, the name of the <code>ImageStream</code> is <code>my-custom-notebook</code>.</p>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">Name:                   my-custom-notebook
+Namespace:              redhat-ods-applications
+Created:                6 minutes ago
+Labels:                 app.kubernetes.io/created-by=byon
+                        opendatahub.io/dashboard=true
+                        opendatahub.io/notebook-image=true
+Annotations:            kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"image.openshift.io/v1","kind":"ImageStream","metadata":{"annotations":{"opendatahub.io/notebook-image-desc":"A custom Jupyter Notebook image","opendatahub.io/notebook-image-name":"My Custom Notebook"},"labels":{"app.kubernetes.io/created-by":"byon","opendatahub.io/dashboard":"true","opendatahub.io/notebook-image":"true"},"name":"my-custom-notebook","namespace":"redhat-ods-applications"},"spec":{"lookupPolicy":{"local":true},"tags":[{"annotations":{"opendatahub.io/notebook-python-dependencies":"[{\"name\":\"PyTorch\",\"version\":\"2.2\"}]","opendatahub.io/notebook-software":"[{\"name\":\"Python\",\"version\":\"v3.11\"}]","opendatahub.io/workbench-image-recommended":"true"},"from":{"kind":"DockerImage","name":"quay.io/modh/rocm-notebooks@sha256:199367d2946fc8....8279b10150020af22db"},"importPolicy":{"importMode":"Legacy"},"name":"1.0","referencePolicy":{"type":"Source"}}]}}
+
+                        opendatahub.io/notebook-image-desc=A custom Jupyter Notebook image
+                        opendatahub.io/notebook-image-name=My Custom Notebook
+                        openshift.io/image.dockerRepositoryCheck=2025-03-10T11:02:44Z
+Image Repository:       image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/my-custom-notebook
+Image Lookup:           local=true
+Unique Images:          1
+Tags:                   1
+
+1.0
+  tagged from quay.io/modh/rocm-notebooks@sha256:199367d2946..b411433ffbb5f0988279b10150020af22db
+
+  * quay.io/modh/rocm-notebooks@sha256:199367d2946fc8427....1433ffbb5f0988279b10150020af22db
+      6 minutes ago</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -604,7 +650,7 @@ spec:
 </ul>
 </div>
 <div class="paragraph">
-<p>In this procedure, you configure a <code>Notebook</code> CRD and then create the <code>Notebook</code> Custom Resource (CR).</p>
+<p>In this procedure, you configure a <code>Notebook</code> CRD and then create the <code>Notebook</code> Custom Resource (CR). Ensure that you use a valid <code>Image</code> URL in the configuration.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -758,7 +804,7 @@ spec:
               name: oauth-config
             - mountPath: /etc/tls/private
               name: tls-certificates
-          image: 'registry.redhat.io/openshift4/ose-oauth-proxy@sha256:4bef31eb993feb6f1096b51b4876c65a6fb1f4401fee97fa4f4542b6b7c9bc46'
+          image: 'registry.redhat.io/openshift4/ose-oauth-proxy@sha256:4bef31eb993feb6f10....401fee97fa4f4542b6b7c9bc46'
           args:
             - '--provider=openshift'
             - '--https-address=:8443'
@@ -978,7 +1024,7 @@ Spec:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-06 10:53:35 +0530
+Last updated 2025-03-11 09:11:20 +0530
 </div>
 </div>
 </body>
