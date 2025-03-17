@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>User guide - Creating a workbench</title>
+<title>Creating a workbench</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -445,15 +445,29 @@ permalink: /docs/api-workbench
 custom_css: asciidoc.css
 ---</p>
 </div>
-<h1 id="_user_guide_creating_a_workbench" class="sect0">User guide - Creating a workbench</h1>
+<h1 id="_creating_a_workbench" class="sect0">Creating a workbench</h1>
 <div class="sect1">
 <h2 id="api-workbench-overview_api-workbench">Overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>In this user guide, you create a Workbench by using the Open Data Hub Custom Resource Definitions (CRDs) and the OpenShift Command Line Interface (CLI). When you create a Workbench, you configure a Notebook image, along with other configurations. The Notebook image is optimized with the tools and libraries that you need for developing and training models.</p>
+<p>As an OpenShift cluster administrator, you can create an Open Data Hub workbench by using the Open Data Hub Custom Resource Definitions (CRDs) and the OpenShift Command Line Interface (CLI). When you create a workbench, you select a notebook image, along with other configurations. The notebook image is optimized with the tools and libraries that you need for developing and training models.</p>
 </div>
 <div class="paragraph">
-<p>You can also use the OpenShift APIs to create the custom resources such as the <code>ImageStream</code> object and the Workbench object. You can programmatically call the APIs through HTTP GET methods in your code, or a Bash, or a Python script. Refer to the <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/image_apis/image-apis#imagestream-image-openshift-io-v1-1" target="_blank" rel="noopener">link</a> to see how you can use the OpenShift API to create an <code>ImageStream</code> resource.</p>
+<p>Open Data Hub includes a selection of default workbench images that a data scientist can select when they create or edit a workbench. In addition, as a cluster administrator, you can create a custom notebook image for your specific use case. You can then use your custom images to create a new workbench instance.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can also use OpenShift APIs to create the resources such as the <code>ImageStream</code> object and the workbench object. You can programmatically call the APIs through HTTP GET methods in your code, or a Bash, or a Python script. For more information about using the OpenShift APIs to create an <code>ImageStream</code> resource, see <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/image_apis/image-apis#imagestream-image-openshift-io-v1-1" target="_blank" rel="noopener">link</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -461,22 +475,22 @@ custom_css: asciidoc.css
 <h2 id="api-custom-image-creating_api-workbench">Creating a custom image by using the <code>ImageStream</code> CRD</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can create custom Notebook images based on your specific use case, apart from the Notebook images that are included in Open Data Hub. You can then use those custom images to create new Workbench instances.</p>
+<p>You can create a custom a notebook image by using the <code>ImageStream</code> Custom Resource Definition (CRD).</p>
 </div>
 <div class="paragraph">
-<p>You can customize a Notebook image by using the <code>ImageStream</code> Custom Resource Definition (CRD).</p>
-</div>
-<div class="paragraph">
-<p>In this procedure, you configure an <code>ImageStream</code> CRD and then create the <code>ImageStream</code> Custom Resource (CR). This <code>ImageStream</code> CR then becomes available in the Open Data Hub Dashboard for you to select while creating a Workbench.</p>
+<p>In the following procedure, you configure an <code>ImageStream</code> CRD and then create the <code>ImageStream</code> Custom Resource (CR). This <code>ImageStream</code> CR then becomes available in the Open Data Hub Dashboard so that you or your data scientist users can select it while creating a workbench.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have access to a Open Data Hub cluster with cluster administrator privileges.</p>
+<p>You have access to an OpenShift cluster with cluster administrator privileges.</p>
 </li>
 <li>
-<p>You have downloaded and installed the OpenShift command-line interface (CLI). See <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/cli_tools/openshift-cli-oc#installing-openshift-cli" target="_blank" rel="noopener">Installing the OpenShift CLI</a>.</p>
+<p>You have installed the OpenShift command-line interface (CLI). See <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/cli_tools/openshift-cli-oc#installing-openshift-cli" target="_blank" rel="noopener">Installing the OpenShift CLI</a>.</p>
+</li>
+<li>
+<p>You have logged in to the cluster as a cluster administrator.</p>
 </li>
 </ul>
 </div>
@@ -484,7 +498,14 @@ custom_css: asciidoc.css
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>To define the <code>ImageStream</code> CRD, create a YAML manifest file called <code>notebook-image-stream.yaml</code> and copy and paste the following configuration in the manifest file.</p>
+<p>Define the <code>ImageStream</code> CRD.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a YAML manifest file named <code>notebook-image-stream.yaml</code>.</p>
+</li>
+<li>
+<p>Copy and paste the following configuration in the manifest file.</p>
 <div class="listingblock">
 <div class="title">Example <code>ImageStream</code></div>
 <div class="content">
@@ -495,8 +516,8 @@ metadata:
     opendatahub.io/notebook-image-desc: A custom Jupyter Notebook image # <b class="conum">(1)</b>
     opendatahub.io/notebook-image-name: My Custom Notebook # <b class="conum">(2)</b>
   name: my-custom-notebook
-  namespace: redhat-ods-applications
-  labels: # <b class="conum">(3)</b>
+  namespace: redhat-ods-applications # <b class="conum">(3)</b>
+  labels: # <b class="conum">(4)</b>
     app.kubernetes.io/created-by: byon
     opendatahub.io/dashboard: 'true'
     opendatahub.io/notebook-image: 'true'
@@ -504,95 +525,92 @@ spec:
   lookupPolicy:
     local: true
   tags:
-    - name: '1.0' # <b class="conum">(4)</b>
-      annotations:
-        opendatahub.io/notebook-python-dependencies: '[{"name":"PyTorch","version":"2.2"}]' # <b class="conum">(5)</b>
-        opendatahub.io/notebook-software: '[{"name":"Python","version":"v3.11"}]' # <b class="conum">(6)</b>
-        opendatahub.io/workbench-image-recommended: 'true' # <b class="conum">(7)</b>
+    - name: '1.0' # <b class="conum">(5)</b>
+      annotations: # <b class="conum">(6)</b>
+        opendatahub.io/notebook-python-dependencies: '[{"name":"PyTorch","version":"2.2"}]' # <b class="conum">(7)</b>
+        opendatahub.io/notebook-software: '[{"name":"Python","version":"v3.11"}]' # <b class="conum">(8)</b>
+        opendatahub.io/workbench-image-recommended: 'true' # <b class="conum">(9)</b>
       from:
         kind: DockerImage
-        name: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/my-custom-workbench:latest'
-      importPolicy: # <b class="conum">(8)</b>
+        name: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/my-custom-workbench:latest' # <b class="conum">(10)</b>
+      importPolicy:
       importPolicy:
         importMode: Legacy
       referencePolicy:
         type: Source</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Specify a description of the Notebook image.</p>
-</li>
-<li>
-<p>Specify an image name. This name will be displayed in the drop down menu when creating a Workbench.</p>
-</li>
-<li>
-<p>Specify the Notebook image labels. These labels are needed for the Notebook image to appear in the Open Data Hub Dashboard. The <code>app.kubernetes.io/created-by: byon</code> label is used to identify where an image object originated from. Ensure the <code>disableBYONImageStream</code> field is set to <code>false</code> with the <code>app.kubernetes.io/created-by: byon</code> label.</p>
-</li>
-<li>
-<p>Specify a version for the Notebook image. You can configure multiple image versions for the same Notebook image. You can select the version of the image to use.</p>
-</li>
-<li>
-<p>Specify an annotation for the <code>opendatahub.io/notebook-python-dependencies</code> field. The <code>opendatahub.io/notebook-python-dependencies</code> annotation gives you information about the Python packages and their versions that are pre-installed in the Notebook image.</p>
-</li>
-<li>
-<p>Specify an annotation for the <code>opendatahub.io/notebook-software</code> field. Use this field to specify information such as the Python version, Jupyter version, or CUDA version.</p>
-</li>
-<li>
-<p>Specify whether the <code>ImageStream</code> version is the default version of the image to be used. Set to <code>'true'</code> if the <code>ImageStream</code> version is the default, else, set to <code>'false'</code>. You need to specify the <code>opendatahub.io/workbench-image-recommended</code> annotation field because there are multiple versions of the image with different configurations.</p>
-</li>
-<li>
-<p>Specify an image registry URL to store the image stream. Store the Notebook image stream in an image registry outside of the Open Data Hub cluster.</p>
 </li>
 </ol>
 </div>
 </li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The example YAML file includes the following information:</p>
+</div>
+<div class="colist arabic">
+<ol>
 <li>
-<p>To create the <code>ImageStream</code> CR, run the following command:</p>
+<p>A description of the notebook image.</p>
+</li>
+<li>
+<p>The image name that will be displayed in the drop down menu when a user creates a workbench in the Open Data Hub dashboard.</p>
+</li>
+<li>
+<p><code>redhat-ods-applications</code> is the default namespace in which the <code>ImageStream</code> CR is created.</p>
+</li>
+<li>
+<p>Notebook image labels that are required if you want the notebook image to appear in the Open Data Hub dashboard. Note: The <code>app.kubernetes.io/created-by: byon</code> label identifies the origination of the image object.</p>
+</li>
+<li>
+<p>Annotations that are required if you want the notebook image to be available in the Open Data Hub dashboard.</p>
+</li>
+<li>
+<p>A version for the notebook image. You can configure multiple image versions for the same notebook image. For this example, the version is 1.0.</p>
+</li>
+<li>
+<p>An annotation for the <code>opendatahub.io/notebook-python-dependencies</code> field that gives the user information about the Python packages and their versions that are pre-installed in the notebook image.</p>
+</li>
+<li>
+<p>The <code>opendatahub.io/notebook-software</code> field that specifies information such as the Python version, Jupyter version, or CUDA version.</p>
+</li>
+<li>
+<p>The <code>opendatahub.io/workbench-image-recommended</code> field specifies whether the <code>ImageStream</code> version is the default version of the image. Set to <code>'true'</code> if the <code>ImageStream</code> version is the default, else, set to <code>'false'</code>. You must specify the <code>opendatahub.io/workbench-image-recommended</code> annotation field if there are multiple versions of the image with different configurations. If you have only one version of the image, set the field to <code>'true'</code>.</p>
+</li>
+<li>
+<p>The image registry URL to store the image stream. Store the notebook image stream in an image registry outside of the Open Data Hub cluster.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To create the <code>ImageStream</code> CR, run the following command where the <code>ImageStream</code> CRD YAML manifest file name is <code>notebook-image-stream.yaml</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc create -f notebook-image-stream.yaml # <b class="conum">(1)</b></code></pre>
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc create -f notebook-image-stream.yaml</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Specify the YAML manifest file name for the <code>ImageStream</code> CRD. In this example, the name of the file is <code>notebook-image-stream.yaml</code>.</p>
 </li>
 </ol>
 </div>
 </li>
 </ol>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>For the Notebook image to be seen in the Open Data Hub Dashboard, ensure you have annotated the image by using the <code>spec.tags</code> section of the <code>ImageStream</code> CRD.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="ulist">
 <div class="title">Verification</div>
 <ul>
 <li>
-<p>To verify whether the <code>ImageStream</code> has successfully created, run the following command:</p>
+<p>To verify that the <code>ImageStream</code> was successfully created, run the following command where the name of the <code>ImageStream</code> is <code>my-custom-notebook</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe imagestream my-custom-notebook -n redhat-ods-applications # <b class="conum">(1)</b></code></pre>
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe imagestream my-custom-notebook -n redhat-ods-applications</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In this example, the name of the <code>ImageStream</code> is <code>my-custom-notebook</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You should see output similar to the following example:</p>
+</div>
 <div class="listingblock">
 <div class="title">Example output</div>
 <div class="content">
@@ -619,11 +637,9 @@ Tags:                   1
       6 minutes ago</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
+<div class="paragraph _additional-resources">
+<div class="title">Additional resources</div>
+<p>For more information about Open Data Hub custom workbench images, see <a href="https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.17/html/managing_openshift_ai/creating-custom-workbench-images#creating-a-custom-image-from-default-image_custom-images" target="_blank" rel="noopener">Creating custom workbench images</a>  .</p>
 </div>
 </div>
 </div>
@@ -631,38 +647,25 @@ Tags:                   1
 <h2 id="api-workbench-creating_api-workbench">Creating a workbench by using the <code>Notebook</code> CRD</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>In Open Data Hub, a Workbench object is created using the <code>Notebook</code> Custom Resource Definition (CRD). The <code>Notebook</code> CRD has the following important configurations, among others:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>OAUTH</p>
-</li>
-<li>
-<p>Notebook image</p>
-</li>
-<li>
-<p>Secret</p>
-</li>
-<li>
-<p>Persistent Volume Claim (PVC)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In this procedure, you configure a <code>Notebook</code> CRD and then create the <code>Notebook</code> Custom Resource (CR). Ensure that you use a valid <code>Image</code> URL in the configuration.</p>
+<p>In Open Data Hub, a workbench object is created by using the <code>Notebook</code> Custom Resource Definition (CRD). In the following procedure, you configure a <code>Notebook</code> CRD and then create the <code>Notebook</code> Custom Resource (CR).</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have access to a Open Data Hub cluster with cluster administrator privileges.</p>
+<p>You have access to an OpenShift cluster with cluster administrator privileges.</p>
 </li>
 <li>
-<p>You have downloaded and installed the OpenShift command-line interface (CLI). See <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/cli_tools/openshift-cli-oc#installing-openshift-cli" target="_blank" rel="noopener">Installing the OpenShift CLI</a>.</p>
+<p>You have installed the OpenShift command-line interface (CLI). See <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/cli_tools/openshift-cli-oc#installing-openshift-cli" target="_blank" rel="noopener">Installing the OpenShift CLI</a>.</p>
 </li>
 <li>
-<p>You have created a data science project called <code>my-data-science-project</code> by using the Open Data Hub Dashboard.</p>
+<p>You have created a data science project. In the example in this procedure, the project is named <code>my-data-science-project</code>.</p>
+</li>
+<li>
+<p>You know the URL for the notebook image that you want to use in the workbench. You can use the image created in the section "Creating a custom image by using the <code>ImageStream</code> CRD".</p>
+</li>
+<li>
+<p>You have logged in to the cluster as a cluster administrator.</p>
 </li>
 </ul>
 </div>
@@ -670,7 +673,14 @@ Tags:                   1
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>To define the <code>Notebook</code> CRD, create a YAML manifest file called <code>notebook.yaml</code> and copy and paste the following configuration in the manifest file.</p>
+<p>Define the <code>Notebook</code> CRD.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a YAML manifest file named <code>notebook.yaml</code>.</p>
+</li>
+<li>
+<p>Copy and paste the following configuration in the manifest file.</p>
 <div class="listingblock">
 <div class="title">Example <code>Notebook</code></div>
 <div class="content">
@@ -684,19 +694,19 @@ metadata:
     opendatahub.io/accelerator-name: ''
     openshift.io/description: '' # <b class="conum">(3)</b>
     openshift.io/display-name: my-workbench # <b class="conum">(4)</b>
-    notebooks.opendatahub.io/last-image-selection: 's2i-minimal-notebook:2024.1' # <b class="conum">(5)</b>
+    notebooks.opendatahub.io/last-image-selection: 's2i-minimal-notebook:2024.1'
     notebooks.kubeflow.org/last_activity_check_timestamp: '2024-07-30T20:43:25Z'
     notebooks.opendatahub.io/last-size-selection: Small
     opendatahub.io/username: 'kube:admin'
     notebooks.kubeflow.org/last-activity: '2024-07-30T20:27:25Z'
-  name: my-workbench # <b class="conum">(6)</b>
-  namespace: my-data-science-project # <b class="conum">(7)</b>
+  name: my-workbench # <b class="conum">(5)</b>
+  namespace: my-data-science-project # <b class="conum">(6)</b>
 spec:
   template:
     spec:
       affinity: {}
       containers:
-        - resources: # <b class="conum">(8)</b>
+        - resources: # <b class="conum">(7)</b>
             limits:
               cpu: '2'
               memory: 8Gi
@@ -724,7 +734,7 @@ spec:
             periodSeconds: 5
             successThreshold: 1
             timeoutSeconds: 1
-          env: # <b class="conum">(9)</b>
+          env: # <b class="conum">(8)</b>
             - name: NOTEBOOK_ARGS
               value: |-
                 --ServerApp.port=8888
@@ -759,9 +769,9 @@ spec:
               name: trusted-ca
               readOnly: true
               subPath: ca-bundle.crt
-          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1' # <b class="conum">(10)</b>
+          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1' # <b class="conum">(9)</b>
           workingDir: /opt/app-root/src
-        - resources: # <b class="conum">(11)</b>
+        - resources: # <b class="conum">(10)</b>
             limits:
               cpu: 100m
               memory: 64Mi
@@ -849,34 +859,31 @@ spec:
 <div class="colist arabic">
 <ol>
 <li>
-<p>Set the annotation to <code>'true'</code>. The <code>inject-oauth</code> annotation is one of the most important annotations while configuring the <code>Notebook</code> CR. The <code>inject-oauth</code> annotation generates other OAUTH-based configurations, such as, the <code>oauth-proxy</code>, automatically.</p>
+<p>The <code>inject-oauth</code> annotation generates other OAUTH-based configurations, such as, the <code>oauth-proxy</code>, automatically. The default is <em>true</em>.</p>
 </li>
 <li>
-<p>This is the name of the <code>Notebook</code> image displayed on the Open Data Hub Dashboard. In this example, the image name is <code>Minimal Python</code>.</p>
+<p>The <code>Notebook</code> image is visible in the Open Data Hub dashboard. In this example, the image name is <code>Minimal Python</code>.</p>
 </li>
 <li>
-<p>Specify a description for the Workbench.</p>
+<p>An optional description of the workbench.</p>
 </li>
 <li>
-<p>Specify a name for the Workbench. This name is displayed on the Open Data Hub Dashboard. In this example, the display name is <code>my-workbench</code>.</p>
+<p>The workbench name is visible in the Open Data Hub dashboard. In this example, the display name is <code>my-workbench</code>.</p>
 </li>
 <li>
-<p>Specify an image version.</p>
+<p>This is the name for the <code>Notebook</code> CR. In this example, the workbench name is <code>my-workbench</code>.</p>
 </li>
 <li>
-<p>Specify a name for the <code>Notebook</code> CR. In this example, the Workbench name is <code>my-workbench</code>.</p>
+<p>The data science project for the workbench. In this example, the data science project name is <code>my-data-science-project</code>.</p>
 </li>
 <li>
-<p>Specify the Data Science project for the Workbench. In this example, the Data Science project name is <code>my-data-science-project</code>.</p>
+<p>The deployment size for the container. You can set values for the CPU and memory limits and requests.</p>
 </li>
 <li>
-<p>Specify a deployment size for the container. You can set the resource size of CPU and memory for the limits and requests. For example, <code>limits: cpu: '2' memory: 8Gi</code> and `            requests: cpu: <em>1</em> memory: 8Gi`.</p>
+<p>Environment variables for configuring values, for example, Jupyter Notebook arguments and SSL/TLS certificates.</p>
 </li>
 <li>
-<p>Specify environment variables for configuring the Jupyter Notebook arguments, SSL/TLS certificate, and so on.</p>
-</li>
-<li>
-<p>Specify the <code>Notebook</code> image. In this example, <code>image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1</code> is the <code>Notebook</code> image. You can select the image version based on the GPU and the packages included in the image.</p>
+<p>The <code>Notebook</code> image. In this example, <code>image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1</code> is the <code>Notebook</code> image. You can select the image version based on the packages included in the image.</p>
 </li>
 <li>
 <p>The <code>inject-oauth</code> annotation configures the <code>oauth-proxy</code> container section of the <code>Notebook</code>.</p>
@@ -884,19 +891,54 @@ spec:
 </ol>
 </div>
 </li>
+</ol>
+</div>
+</li>
 <li>
-<p>To create the <code>Notebook</code> CR, run the following command:</p>
+<p>Edit the <code>notebooks.opendatahub.io/oauth-logout-url</code> field in the example YAML, replacing <code>my-data-science-project</code> with the name of the data science project you created.</p>
+<div class="listingblock">
+<div class="title">Example <code>Notebook</code></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+    ...
+    notebooks.opendatahub.io/oauth-logout-url: 'https://rhods-dashboard-redhat-ods-applications.apps.my-cluster.com/projects/my-data-science-project?notebookLogout=my-workbench'
+    ...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit the <code>'--logout-url=</code> field in the example YAML, replacing <code>my-data-science-project</code> with the name of the data science project you created.</p>
+<div class="listingblock">
+<div class="title">Example <code>Notebook</code></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+  ...
+spec:
+  template:
+    spec:
+      affinity: {}
+      containers:
+      ...
+      - resources:
+      ...
+       args:
+       - '--logout-url=https://rhods-dashboard-redhat-ods-applications.apps.my-cluster.com/projects/my-data-science-project?notebookLogout=my-workbench'
+       ...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To create the <code>Notebook</code> CR, run the following command where the <code>Notebook</code> CRD YAML manifest file name is <code>notebook.yaml</code>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc create -f notebook.yaml # <b class="conum">(1)</b></code></pre>
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc create -f notebook.yaml</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Specify the YAML manifest file name for the <code>Notebook</code> CRD. In this example, the name of the file is <code>notebook.yaml</code>.</p>
-</li>
-</ol>
 </div>
 </li>
 </ol>
@@ -905,16 +947,18 @@ spec:
 <div class="title">Verification</div>
 <ul>
 <li>
-<p>To verify whether the Workbench has successfully created, run the following command:</p>
+<p>To verify that the Workbench was successfully created, run the following command, replacing <code>my-data-science-project</code> with the name of the project where you created the <code>Notebook</code> CR.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe notebook -n my-data-science-project # <b class="conum">(1)</b></code></pre>
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc describe notebook -n my-data-science-project</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The <code>Notebook</code> CR is created in the <code>my-data-science-project</code> namespace.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You should see output similar to the following example:</p>
+</div>
 <div class="listingblock">
 <div class="title">Example output</div>
 <div class="content">
@@ -1013,18 +1057,12 @@ Spec:
           --provider=openshift</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-11 09:11:20 +0530
+Last updated 2025-03-17 11:03:44 +0530
 </div>
 </div>
 </body>
